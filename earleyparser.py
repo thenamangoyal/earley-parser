@@ -360,7 +360,7 @@ def main():
 
 	parser.add_argument('--draw', action='store_true')
 	parser.add_argument('--latex', action='store_true')
-	parser.add_argument('--grammar_file', help="Filepath to grammer file")
+	parser.add_argument('--grammar_file', help="Filepath to grammar file")
 
 	args = parser.parse_args()
 

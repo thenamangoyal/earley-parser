@@ -15,7 +15,7 @@ python earleyparser.py --grammar sample-grammar.txt < sample-sentence.txt
 More generally, you can run the parser as follow,
 
 ```
-python earleyparser.py --grammar <grammer_file>
+python earleyparser.py --grammar <grammar_file>
 ```
 
 which reads sentences from standard in, one at a time, printing the parses to standard output using pretty_print(), with parses separated by an extra newline. For sentences that do not have a parse according to the grammar, it prints the sentence back out, unchanged.
@@ -23,7 +23,7 @@ which reads sentences from standard in, one at a time, printing the parses to st
 Running with the `draw` option, like so,
 
 ```
-python earleyparser.py --draw --grammar <grammer_file>
+python earleyparser.py --draw --grammar <grammar_file>
 ```
 
 displays the parses using NLTK's tree-drawing.
@@ -31,7 +31,7 @@ displays the parses using NLTK's tree-drawing.
 Running with the `latex` option, like so,
 
 ```
-python earleyparser.py --latex --grammar <grammer_file>
+python earleyparser.py --latex --grammar <grammar_file>
 ```
 
 displays the parses in latex qtree format using NLTK's pformat_latex_qtree().
