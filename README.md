@@ -6,13 +6,13 @@ My implementation of the [Earley parser](https://en.wikipedia.org/wiki/Earley_pa
 Example usage:
 
 ```
-python earleyparser.py sample-grammar.txt < sample-sentence.txt
+python earleyparser.py --grammar sample-grammar.txt < sample-sentence.txt
 ```
 
 More generally, you can run the parser as follow,
 
 ```
-python earleyparser.py <grammer_file>
+python earleyparser.py --grammar <grammer_file>
 ```
 
 which reads sentences from standard in, one at a time, printing the parses to standard output using pretty_print(), with parses separated by an extra newline. For sentences that do not have a parse according to the grammar, it prints the sentence back out, unchanged.
@@ -20,7 +20,7 @@ which reads sentences from standard in, one at a time, printing the parses to st
 Running with the `draw` option, like so,
 
 ```
-python earleyparser.py draw <grammer_file>
+python earleyparser.py --draw --grammar <grammer_file>
 ```
 
 displays the parses using NLTK's tree-drawing.
