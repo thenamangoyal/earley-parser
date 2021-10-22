@@ -10,7 +10,10 @@ import string
 
 from collections import defaultdict
 from nltk.tree import Tree
-
+from nltk.draw.util import Canvas
+from nltk.draw import TreeWidget
+from nltk.draw.util import CanvasFrame
+import time
 
 class Rule(object):
 	"""
@@ -370,6 +373,8 @@ def main():
 		parse = EarleyParse(sentence, grammar)
 		parse.parse()
 		return parse.get()
+	
+	cf = CanvasFrame()
 
 	while True:
 		try:
@@ -387,17 +392,20 @@ def main():
 				print("Found {} parse{} for\n{}".format(len(parses), "s" if len(parses)>1 else "", sentence))
 				for parse in parses:
 					if args.draw:
-						parse.draw()
+						tc = TreeWidget(cf.canvas(), parse)
+						cf.add_widget(tc)
+						cf.canvas().update()
+						time.sleep(2)
+						cf.destroy_widget(tc)
 					elif args.latex:
 						print(parse.pformat_latex_qtree())
 					else:
 						parse.pretty_print()
 		except EOFError:
-			sys.exit()
-
-		if args.draw:
-			sys.exit()
-
+			cf.destroy()
+			break
+	
+	# cf.mainloop()
 		
 if __name__ == '__main__':
 	main()
