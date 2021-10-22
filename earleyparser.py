@@ -339,12 +339,13 @@ class EarleyParse(object):
 			return Tree(state.rule.lhs,
 				[get_helper(s) for s in state.back_pointers])
 
+		parses = []
 		for state in self.chart[-1]:
 			if state.is_complete() and state.rule.lhs == 'S' and \
 				state.sent_pos == 0 and state.chart_pos == len(self.words):
-				return get_helper(state)
+				parses.append(get_helper(state))
 
-		return None
+		return parses
 
 
 def main():
@@ -379,16 +380,18 @@ def main():
 			for p in string.punctuation:
 				stripped_sentence = stripped_sentence.replace(p, '')
 
-			parse = run_parse(stripped_sentence)
-			if not parse:
+			parses = run_parse(stripped_sentence)
+			if not parses:
 				print("Can't parse\n"+sentence + '\n')
 			else:
-				if args.draw:
-					parse.draw()
-				elif args.latex:
-					print(parse.pformat_latex_qtree())
-				else:
-					parse.pretty_print()
+				print("Found {} parse{} for\n{}".format(len(parses), "s" if len(parses)>1 else "", sentence))
+				for parse in parses:
+					if args.draw:
+						parse.draw()
+					elif args.latex:
+						print(parse.pformat_latex_qtree())
+					else:
+						parse.pretty_print()
 		except EOFError:
 			sys.exit()
 
