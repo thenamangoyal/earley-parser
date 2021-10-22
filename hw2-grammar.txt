@@ -1,0 +1,25 @@
+S -> Pron VP
+S -> N VP
+Pron -> You | you | your | I
+N -> Boots | door | space | cowboy
+V -> were | made | sitting | do | want | stay | have | am | going | fence
+ADV -> not | anymore | in
+P -> for | by | to
+D -> the
+MV -> can
+
+VP -> VB
+VP -> VP ADV
+VP -> VB NP
+VB -> VB PP
+VB -> V
+VB -> MV V PossNP
+VB -> V ADV V
+
+PP -> P V
+PP -> P NP
+
+NP -> D N
+NP -> N
+NP -> Pron
+PossNP -> Pron N

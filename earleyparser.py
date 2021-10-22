@@ -88,7 +88,7 @@ class Grammar(object):
 	def __str__(self):
 		s = [str(r) for r in self.rules['S']]
 
-		for nt, rule_list in self.rules.iteritems():
+		for nt, rule_list in self.rules.items():
 			if nt == 'S':
 				continue
 
@@ -163,7 +163,7 @@ class EarleyState(object):
 		return (str_helper(self) +
 			' (' + ', '.join(str_helper(s) for s in self.back_pointers) + ')')
 
-	def next(self):
+	def __next__(self):
 		"""
 		Return next symbol to parse, i.e. the one after the dot
 		"""
@@ -266,7 +266,7 @@ class EarleyParse(object):
 		Earley Predictor.
 		"""
 
-		for rule in self.grammar[state.next()]:
+		for rule in self.grammar[next(state)]:
 			self.chart[pos].add(EarleyState(rule, dot=0,
 				sent_pos=state.chart_pos, chart_pos=state.chart_pos))
 
@@ -278,8 +278,8 @@ class EarleyParse(object):
 		if state.chart_pos < len(self.words):
 			word = self.words[state.chart_pos]
 
-			if any((word in r) for r in self.grammar[state.next()]):
-				self.chart[pos + 1].add(EarleyState(Rule(state.next(), [word]),
+			if any((word in r) for r in self.grammar[next(state)]):
+				self.chart[pos + 1].add(EarleyState(Rule(next(state), [word]),
 					dot=1, sent_pos=state.chart_pos,
 					chart_pos=(state.chart_pos + 1)))
 
@@ -289,7 +289,7 @@ class EarleyParse(object):
 		"""
 
 		for prev_state in self.chart[state.sent_pos]:
-			if prev_state.next() == state.rule.lhs:
+			if next(prev_state) == state.rule.lhs:
 				self.chart[pos].add(EarleyState(prev_state.rule,
 					dot=(prev_state.dot + 1), sent_pos=prev_state.sent_pos,
 					chart_pos=pos,
@@ -303,7 +303,7 @@ class EarleyParse(object):
 
 		# Checks whether the next symbol for the given state is a tag.
 		def is_tag(state):
-			return self.grammar.is_tag(state.next())
+			return self.grammar.is_tag(next(state))
 
 		for i in range(len(self.chart)):
 			for state in self.chart[i]:
@@ -357,8 +357,9 @@ def main():
 	
 	parser = argparse.ArgumentParser(description=parser_description)
 
-	parser.add_argument('draw', nargs='?', default=False)
-	parser.add_argument('grammar_file', help="Filepath to grammer file")
+	parser.add_argument('--draw', action='store_true')
+	parser.add_argument('--latex', action='store_true')
+	parser.add_argument('--grammar_file', help="Filepath to grammer file")
 
 	args = parser.parse_args()
 
@@ -371,7 +372,7 @@ def main():
 
 	while True:
 		try:
-			sentence = raw_input()
+			sentence = input()
 
 			# Strip the sentence of any puncutation.
 			stripped_sentence = sentence
@@ -379,11 +380,13 @@ def main():
 				stripped_sentence = stripped_sentence.replace(p, '')
 
 			parse = run_parse(stripped_sentence)
-			if parse is None:
-				print sentence + '\n'
+			if not parse:
+				print("Can't parse\n"+sentence + '\n')
 			else:
 				if args.draw:
 					parse.draw()
+				elif args.latex:
+					print(parse.pformat_latex_qtree())
 				else:
 					parse.pretty_print()
 		except EOFError:
@@ -395,3 +398,4 @@ def main():
 		
 if __name__ == '__main__':
 	main()
+
